@@ -1,5 +1,5 @@
 import React from 'react';
-import Marker from './components/Marker';
+import Map from './components/Map';
 
 const auctions = [
   {
@@ -30,11 +30,11 @@ const auctions = [
 ];
 
 const App = () => {
-  const renderAuctions = auctions.map((auction, index) => {
-    return <Marker key={auction.id} auction={auction} />;
-  });
-
-  return <div>{renderAuctions}</div>;
+  return (
+    <div>
+      <Map auction={auctions[2]} />
+    </div>
+  );
 };
 
 export default App;
