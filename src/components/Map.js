@@ -84,6 +84,7 @@ const Map = ({ auction }) => {
         <LocationOnIcon
           className={classesIcon.root}
           onClick={handleClick}
+          onMouseEnter={handleClick}
           style={{ fontSize: 40 }}
         />
       </Marker>
@@ -96,7 +97,7 @@ const Map = ({ auction }) => {
           onClose={handleClose}
           anchor="top"
         >
-          <Box className={classes.root}>
+          <Box className={classes.root} onMouseLeave={handleClose}>
             <div className={classes.auctionInfoTitle}>Номер аукціона</div>
             <div className={classes.auctionInfoContent}>{auction.id}</div>
             <div className={classes.auctionInfoTitle}>Дата проведення</div>
