@@ -1,5 +1,39 @@
 import React from 'react';
 import Map from './components/Map';
+import Amplify, { API } from 'aws-amplify';
+
+Amplify.configure({
+    aws_appsync_graphqlEndpoint: process.env.REACT_APP_ENDPOINT, // (optional) - AWS AppSync endpoint
+    aws_appsync_authenticationType: process.env.REACT_APP_AUTH_TYPE, // (optional) - Primary AWS AppSync authentication type
+    aws_appsync_apiKey: process.env.REACT_APP_API_KEY, // (optional) - AWS AppSync API Key
+  });
+
+const getPlacesByOblastRegion = `query GetPlacesByOblastRegion($oblast: String, $region_start_with: String) {
+  getPlacesByOblastRegion(oblast: $oblast, region_start_with: $region_start_with) {
+    oblast
+    region
+    area
+    kadastr_num
+    lat
+    long
+    place
+    previousId
+    place
+  }
+}`;
+
+const getDataFromRegions = async (input) => {
+  const { oblast, region_start_with } = input;
+  return await API.graphql({
+    query: getPlacesByOblastRegion,
+    variables: {
+      "oblast": oblast,
+      "region_start_with": region_start_with
+    }
+  });
+}
+
+
 
 const auctions = [
   {
@@ -30,8 +64,15 @@ const auctions = [
 ];
 
 const App = () => {
+  const handleOnClick = async () => {
+    // if you set region_start_with to '#' response will contain data from all regions in selected oblast
+    const input = { oblast: "#Полтавська", region_start_with: "#Кр" };
+    const dataFromRegions = await getDataFromRegions(input);
+    console.log(dataFromRegions);
+  }
   return (
     <div>
+      <button onClick={handleOnClick}>Button</button>
       <Map auction={auctions[2]} />
     </div>
   );
