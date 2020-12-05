@@ -15,24 +15,21 @@ const useStyles = makeStyles((theme) => ({
 
 const regions = [
   {
-    value: 'noneRegion',
-    label: 'Виберіть область',
-    districts: [{ value: 'noneDistrict', label: 'Виберіть район' }],
+    name: 'Виберіть область',
+    districts: [{ name: 'Виберіть район' }],
   },
   {
-    value: 'kirovohrad',
-    label: 'Кіровоградська',
+    name: 'Кіровоградська',
     districts: [
-      { value: 'bobrynets', label: 'Бобринецький' },
-      { value: 'dobrovelychkivka', label: 'Добровеличківський ' },
+      { name: 'Бобринецький' },
+      { name: 'Добровеличківський ' },
     ],
   },
   {
-    value: 'dnipropetrovsk',
-    label: 'Дніпропетровська',
+    name: 'Дніпропетровська',
     districts: [
-      { value: 'petrykivka', label: 'Петриківський' },
-      { value: 'vasylkivka', label: 'Васильківський' },
+      { name: 'Петриківський' },
+      { name: 'Васильківський' },
     ],
   },
 ];
@@ -44,7 +41,7 @@ const RegionDistrictForm = ({ handleOnSubmit }) => {
 
   const handleChangeRegion = (event) => {
     const region = regions.find((region) => {
-      return region.value === event.target.value;
+      return region.name === event.target.value;
     });
 
     setRegion(region);
@@ -53,7 +50,7 @@ const RegionDistrictForm = ({ handleOnSubmit }) => {
 
   const handleChangeDistrict = (event) => {
     const district = region.districts.find((district) => {
-      return district.value === event.target.value;
+      return district.name === event.target.value;
     });
 
     setDistrict(district);
@@ -65,14 +62,14 @@ const RegionDistrictForm = ({ handleOnSubmit }) => {
         classes={classes}
         inputLabel="Область"
         handleChange={handleChangeRegion}
-        selectedAreaValue={region.value}
+        selectedAreaValue={region.name}
         areas={regions}
       />
       <AreaSelect
         classes={classes}
         inputLabel="Район"
         handleChange={handleChangeDistrict}
-        selectedAreaValue={district.value}
+        selectedAreaValue={district.name}
         areas={region.districts}
       />
       <Button

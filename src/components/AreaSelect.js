@@ -13,8 +13,8 @@ const AreaSelect = ({
 }) => {
   const renderAreas = areas.map((area, index) => {
     return (
-      <MenuItem key={index} value={area.value}>
-        {area.label}
+      <MenuItem key={index} value={area.name}>
+        {area.name}
       </MenuItem>
     );
   });

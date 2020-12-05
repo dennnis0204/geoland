@@ -76,8 +76,8 @@ const App = () => {
   };
 
   const handleRegionDistrictFormSubmit = (region, district) => {
-    const regionName = `#${region.label}`;
-    const districtName = `#${district.label}`;
+    const regionName = `#${region.name}`;
+    const districtName = `#${district.name}`;
     if (region.value !== 'noneRegion' && district.value !== 'noneDistrict') {
       fetchDistrictAuctions(regionName, districtName);
     }
