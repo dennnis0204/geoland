@@ -1,12 +1,13 @@
 import React from 'react';
 import Map from './components/Map';
 import Amplify, { API } from 'aws-amplify';
+import RegionDistrictForm from './components/RegionDistrictForm';
 
 Amplify.configure({
-    aws_appsync_graphqlEndpoint: process.env.REACT_APP_ENDPOINT, // (optional) - AWS AppSync endpoint
-    aws_appsync_authenticationType: process.env.REACT_APP_AUTH_TYPE, // (optional) - Primary AWS AppSync authentication type
-    aws_appsync_apiKey: process.env.REACT_APP_API_KEY, // (optional) - AWS AppSync API Key
-  });
+  aws_appsync_graphqlEndpoint: process.env.REACT_APP_ENDPOINT, // (optional) - AWS AppSync endpoint
+  aws_appsync_authenticationType: process.env.REACT_APP_AUTH_TYPE, // (optional) - Primary AWS AppSync authentication type
+  aws_appsync_apiKey: process.env.REACT_APP_API_KEY, // (optional) - AWS AppSync API Key
+});
 
 const getPlacesByOblastRegion = `query GetPlacesByOblastRegion($oblast: String, $region_start_with: String) {
   getPlacesByOblastRegion(oblast: $oblast, region_start_with: $region_start_with) {
@@ -27,13 +28,11 @@ const getDataFromRegions = async (input) => {
   return await API.graphql({
     query: getPlacesByOblastRegion,
     variables: {
-      "oblast": oblast,
-      "region_start_with": region_start_with
-    }
+      oblast: oblast,
+      region_start_with: region_start_with,
+    },
   });
-}
-
-
+};
 
 const auctions = [
   {
@@ -43,6 +42,8 @@ const auctions = [
     district: 'м. Івано-Франківськ',
     locality: 'м. Івано-Франківськ',
     eventPlace: 'вул. Василіянок, 62 А',
+    latitude: 47.94,
+    longitude: 32.12,
   },
   {
     id: 29994,
@@ -51,6 +52,8 @@ const auctions = [
     district: 'м. Полтава',
     locality: 'м. Полтава',
     eventPlace: 'вул. Дмитря Коряка, будинок 3, 8-й поверх, (актова зала).',
+    latitude: 47.94,
+    longitude: 31.76,
   },
   {
     id: 29833,
@@ -60,20 +63,30 @@ const auctions = [
     locality: 'с. Нове Місто',
     eventPlace:
       'Львівська обл., Старосамбірський р-н, с.Нове Місто, вул.Руська, 10. Початок торгів о 11.00 год. Реєстрація учасників земельних торгів в день проведення з 08-00 год. до 10-40 год.',
+    latitude: 47.89,
+    longitude: 32.28,
   },
 ];
 
 const App = () => {
-  const handleOnClick = async () => {
-    // if you set region_start_with to '#' response will contain data from all regions in selected oblast
-    const input = { oblast: "#Полтавська", region_start_with: "#Кр" };
-    const dataFromRegions = await getDataFromRegions(input);
-    console.log(dataFromRegions);
-  }
+  const fetchDistrictAuctions = async (regionName, districtName) => {
+    const requestData = { oblast: regionName, region_start_with: districtName };
+    const districtAuctions = await getDataFromRegions(requestData);
+    console.log(districtAuctions);
+  };
+
+  const handleRegionDistrictFormSubmit = (region, district) => {
+    const regionName = `#${region.label}`;
+    const districtName = `#${district.label}`;
+    if (region.value !== 'noneRegion' && district.value !== 'noneDistrict') {
+      fetchDistrictAuctions(regionName, districtName);
+    }
+  };
+
   return (
     <div>
-      <button onClick={handleOnClick}>Button</button>
-      <Map auction={auctions[2]} />
+      <Map auctions={auctions} />
+      <RegionDistrictForm handleOnSubmit={handleRegionDistrictFormSubmit} />
     </div>
   );
 };
